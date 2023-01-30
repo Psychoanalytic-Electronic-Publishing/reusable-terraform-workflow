@@ -10,6 +10,10 @@ on:
         required: false
         type: string
         default: us-east-1
+      apply-environment:
+        required: false
+        type: string
+        default: manual-approval
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -92,7 +96,7 @@ jobs:
   apply:
     needs: [plan]
     if: always() && needs.plan.result == 'success' && needs.plan.outputs.planExitcode == 2
-    environment: staging
+    environment: ${{ inputs.apply-environment }}
     timeout-minutes: 20
     defaults:
       run:
