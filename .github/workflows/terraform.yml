@@ -88,7 +88,7 @@ jobs:
       - name: Cache Terraform Plan
         uses: actions/cache/save@v3
         with:
-          path: infra/staging/tfplan.out
+          path: $${{ inputs.module-path }}/tfplan.out
           key: terraform-plan
     outputs:
       planExitcode: ${{ steps.plan.outputs.exitcode }}
@@ -137,7 +137,7 @@ jobs:
       - name: Restore Terraform Plan
         uses: actions/cache/restore@v3
         with:
-          path: infra/staging/tfplan.out
+          path: $${{ inputs.module-path }}/tfplan.out
           key: terraform-plan
 
       - name: Terraform Apply
