@@ -164,6 +164,6 @@ jobs:
             github.rest.actions.deleteActionsCacheByKey({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              key: "terraform-plan",
+              key: "${{ inputs.module-path }}-terraform-plan",
             })
         continue-on-error: true # TODO: HANDLE 404 explicitly
