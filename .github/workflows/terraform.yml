@@ -73,9 +73,9 @@ jobs:
             ${{ inputs.module-path }}/.terraform.lock.hcl
             ${{ inputs.module-path }}/.terraform
             ~/.terraform.d/plugin-cache
-          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+          key: ${{ inputs.module-path }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
           restore-keys: |
-            ${{ runner.os }}-terraform-
+            ${{ inputs.module-path }}-terraform-
 
       - name: Terraform fmt
         run: terraform fmt -check
@@ -96,7 +96,7 @@ jobs:
           path: |
             ${{ inputs.module-path }}/tfplan.out
             ${{ inputs.module-path }}/builds
-          key: terraform-plan
+          key: ${{ inputs.module-path }}-terraform-plan
     outputs:
       planExitcode: ${{ steps.plan.outputs.exitcode }}
 
@@ -137,9 +137,9 @@ jobs:
             ${{ inputs.module-path }}/.terraform.lock.hcl
             ${{ inputs.module-path }}/.terraform
             ~/.terraform.d/plugin-cache
-          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+          key: ${{ inputs.module-path }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
           restore-keys: |
-            ${{ runner.os }}-terraform-
+            ${{ inputs.module-path }}-terraform-
 
       - name: Restore Terraform Plan
         uses: actions/cache/restore@v3
@@ -147,7 +147,7 @@ jobs:
           path: |
             ${{ inputs.module-path }}/tfplan.out
             ${{ inputs.module-path }}/builds
-          key: terraform-plan
+          key: ${{ inputs.module-path }}-terraform-plan
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve "tfplan.out"
