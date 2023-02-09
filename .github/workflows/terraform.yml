@@ -16,7 +16,7 @@ on:
         default: manual-approval
       node-version:
         required: false
-        type: number
+        type: string
         default: 16
     secrets:
       AWS_ACCESS_KEY_ID:
