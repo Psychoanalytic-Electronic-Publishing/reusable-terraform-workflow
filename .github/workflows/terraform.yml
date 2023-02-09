@@ -14,6 +14,10 @@ on:
         required: false
         type: string
         default: manual-approval
+      node-version:
+        required: false
+        type: number
+        default: 16
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -58,7 +62,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: ${{ inputs.node-version }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -130,8 +134,7 @@ jobs:
           python-version: "3.8"
 
       - uses: actions/setup-node@v3
-        with:
-          node-version: 14
+        with: ${{ inputs.node-version }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
