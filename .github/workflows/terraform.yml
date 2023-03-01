@@ -48,7 +48,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Configure dynamic environment variables
-        run: echo "${{ secrets.ENV_VARS }}" >> $GITHUB_ENV
+        run: echo -e "${{ secrets.ENV_VARS }}" >> $GITHUB_ENV
 
       - name: Download Any Build Artifacts
         uses: actions/download-artifact@v3
