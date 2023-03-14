@@ -49,7 +49,10 @@ jobs:
 
       - name: Configure dynamic environment variables
         run: |-
-          echo "::add-mask::30" ;
+          test1="hello=30"
+          SPLIT=(${test1//=/ })
+          VALUE=${SPLIT[1]}
+          echo "::add-mask::$VALUE" ;
           echo ${{ secrets.ENV_VARS }} | while read LINE ; do
             SPLIT=(${LINE//=/ })
             VALUE=${SPLIT[1]}
