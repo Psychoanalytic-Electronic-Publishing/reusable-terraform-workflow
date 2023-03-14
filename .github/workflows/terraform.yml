@@ -53,6 +53,8 @@ jobs:
             SPLIT=(${LINE//=/ })
             VALUE=${SPLIT[1]}
             echo "::add-mask::$VALUE" 
+            echo ${SPLIT[0]}
+            echo ${SPLIT[1]}
           done ;
           echo -e "${{ secrets.ENV_VARS }}" >> $GITHUB_ENV
 
