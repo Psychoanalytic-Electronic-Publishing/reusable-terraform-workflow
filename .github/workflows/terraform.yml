@@ -48,7 +48,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Configure dynamic environment variables
-        run: >
+        run: |-
           echo ${{ secrets.ENV_VARS }} | while read LINE ; do
             SPLIT=(${LINE//=/ })
             VALUE=${SPLIT[1]}
