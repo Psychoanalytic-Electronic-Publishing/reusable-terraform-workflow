@@ -6,7 +6,7 @@ on:
       module-path:
         required: true
         type: string
-      s3-artifact-bucket:
+      s3-cache-bucket:
         required: true
         type: string
       region:
@@ -109,8 +109,8 @@ jobs:
 
       - name: Upload build plan and outputs to S3
         run: |
-          aws s3 cp tfplan.out s3://${{ inputs.s3-artifact-bucket }}/${{ github.run_id }}/tfplan.out
-          aws s3 cp builds/ s3://${{ inputs.s3-artifact-bucket }}/${{ github.run_id }}/builds/ --recursive
+          aws s3 cp tfplan.out s3://${{ inputs.s3-cache-bucket }}/${{ github.run_id }}/tfplan.out
+          aws s3 cp builds/ s3://${{ inputs.s3-cache-bucket }}/${{ github.run_id }}/builds/ --recursive
 
     outputs:
       planExitcode: ${{ steps.plan.outputs.exitcode }}
@@ -162,8 +162,8 @@ jobs:
 
       - name: Download build plan and outputs from S3
         run: |
-          aws s3 cp s3://${{ inputs.s3-artifact-bucket }}/${{ github.run_id }}/tfplan.out tfplan.out
-          aws s3 cp s3://${{ inputs.s3-artifact-bucket }}/${{ github.run_id }}/builds/ builds/ --recursive
+          aws s3 cp s3://${{ inputs.s3-cache-bucket }}/${{ github.run_id }}/tfplan.out tfplan.out
+          aws s3 cp s3://${{ inputs.s3-cache-bucket }}/${{ github.run_id }}/builds/ builds/ --recursive
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve "tfplan.out"
