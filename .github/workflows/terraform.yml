@@ -6,6 +6,9 @@ on:
       module-path:
         required: true
         type: string
+      s3-artifact-bucket:
+        required: true
+        type: string
       region:
         required: false
         type: string
@@ -104,6 +107,11 @@ jobs:
         id: plan
         run: terraform plan -detailed-exitcode -out tfplan.out
 
+      - name: Upload build plan and outputs to S3
+        run: |
+          aws s3 cp ${{ inputs.module-path }}/tfplan.out s3://${{ inputs.s3-artifact-bucket }}/${{ github.run_id }}/tfplan.out
+          aws s3 cp ${{ inputs.module-path }}/builds/ s3://${{ inputs.s3-artifact-bucket }}/${{ github.run_id }}/builds/ --recursive
+
       - name: Cache Terraform Plan
         uses: actions/cache/save@v3
         with:
@@ -166,6 +174,11 @@ jobs:
             ${{ inputs.module-path }}/tfplan.out
             ${{ inputs.module-path }}/builds
           key: ${{ inputs.module-path }}-terraform-plan
+
+      - name: Download build plan and outputs from S3
+        run: |
+          aws s3 cp s3://${{ inputs.s3-artifact-bucket }}/${{ github.run_id }}/tfplan.out ${{ inputs.module-path }}/tfplan.out
+          aws s3 cp s3://${{ inputs.s3-artifact-bucket }}/${{ github.run_id }}/builds/ ${{ inputs.module-path }}/builds/ --recursive
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve "tfplan.out"
