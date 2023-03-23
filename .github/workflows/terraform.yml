@@ -108,8 +108,6 @@ jobs:
             ${{ inputs.module-path }}/.terraform
             ~/.terraform.d/plugin-cache
           key: ${{ inputs.module-path }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
-          restore-keys: |
-            ${{ inputs.module-path }}-terraform-
 
       - name: Terraform Validate
         run: terraform validate -no-color
