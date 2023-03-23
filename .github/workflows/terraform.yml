@@ -112,13 +112,6 @@ jobs:
           aws s3 cp tfplan.out s3://${{ inputs.s3-artifact-bucket }}/${{ github.run_id }}/tfplan.out
           aws s3 cp builds/ s3://${{ inputs.s3-artifact-bucket }}/${{ github.run_id }}/builds/ --recursive
 
-      - name: Cache Terraform Plan
-        uses: actions/cache/save@v3
-        with:
-          path: |
-            ${{ inputs.module-path }}/tfplan.out
-            ${{ inputs.module-path }}/builds
-          key: ${{ inputs.module-path }}-terraform-plan
     outputs:
       planExitcode: ${{ steps.plan.outputs.exitcode }}
 
@@ -167,14 +160,6 @@ jobs:
           restore-keys: |
             ${{ inputs.module-path }}-terraform-
 
-      - name: Restore Terraform Plan
-        uses: actions/cache/restore@v3
-        with:
-          path: |
-            ${{ inputs.module-path }}/tfplan.out
-            ${{ inputs.module-path }}/builds
-          key: ${{ inputs.module-path }}-terraform-plan
-
       - name: Download build plan and outputs from S3
         run: |
           aws s3 cp s3://${{ inputs.s3-artifact-bucket }}/${{ github.run_id }}/tfplan.out tfplan.out
@@ -182,19 +167,3 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve "tfplan.out"
-
-  clean:
-    needs: [apply]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clear Plan Cache
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.actions.deleteActionsCacheByKey({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              key: "${{ inputs.module-path }}-terraform-plan",
-            })
-        continue-on-error: true # TODO: HANDLE 404 explicitly
