@@ -83,8 +83,8 @@ jobs:
           echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' >~/.terraformrc
           mkdir --parents ~/.terraform.d/plugin-cache
 
-      - name: Cache Terraform Plugins
-        uses: actions/cache@v3
+      - name: Cache Plugin Restore
+        uses: actions/cache/restore@v3
         with:
           path: |
             ${{ inputs.module-path }}/.terraform.lock.hcl
@@ -99,6 +99,17 @@ jobs:
 
       - name: Terraform Init
         run: terraform init -input=false -backend-config=../backend.conf
+
+      - name: Cache Terraform Plugins
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            ${{ inputs.module-path }}/.terraform.lock.hcl
+            ${{ inputs.module-path }}/.terraform
+            ~/.terraform.d/plugin-cache
+          key: ${{ inputs.module-path }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+          restore-keys: |
+            ${{ inputs.module-path }}-terraform-
 
       - name: Terraform Validate
         run: terraform validate -no-color
