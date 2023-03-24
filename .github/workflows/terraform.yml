@@ -93,8 +93,9 @@ jobs:
 
       - name: Upload build plan and outputs to S3
         run: |
-          [ -f "tfplan.out" ] && aws s3 cp tfplan.out s3://${{ inputs.s3-cache-bucket }}/${{ github.run_id }}/tfplan.out
-          [ -d "builds/" ] && aws s3 cp builds/ s3://${{ inputs.s3-cache-bucket }}/${{ github.run_id }}/builds/ --recursive
+          mkdir -p builds/
+          aws s3 cp tfplan.out s3://${{ inputs.s3-cache-bucket }}/${{ github.run_id }}/tfplan.out
+          aws s3 cp builds/ s3://${{ inputs.s3-cache-bucket }}/${{ github.run_id }}/builds/ --recursive
 
     outputs:
       planExitcode: ${{ steps.plan.outputs.exitcode }}
