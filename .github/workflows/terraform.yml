@@ -59,11 +59,6 @@ jobs:
           done ;
           echo -e "${{ secrets.ENV_VARS }}" >> $GITHUB_ENV
 
-      - name: Download Any Build Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          path: ${{ inputs.module-path }}/builds
-
       - name: Setup Python 3.8
         uses: actions/setup-python@v4
         with:
